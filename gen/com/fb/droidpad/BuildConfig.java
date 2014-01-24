@@ -1,5 +1,5 @@
 /** Automatically generated file. DO NOT MODIFY */
-package com.andyzg.droidpad;
+package com.fb.droidpad;
 
 public final class BuildConfig {
     public final static boolean DEBUG = true;

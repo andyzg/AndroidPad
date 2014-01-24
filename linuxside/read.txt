@@ -1,1 +1,0 @@
-let this be the folder to put the linux drivers/linux side code
