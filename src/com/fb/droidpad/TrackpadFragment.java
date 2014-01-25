@@ -18,12 +18,13 @@ import android.view.ViewGroup;
 
 public class TrackpadFragment extends Fragment implements ServerSocketListener {
 
-	private InputStream inputStream;
-	private OutputStream outputStream;
-	private PrintWriter printWriter;
+	private InputStream mInputStream = null;
+	private OutputStream mOutputStream = null;
+	private PrintWriter mPrintWriter = null;
+	private BluetoothSocket mSocket = null;
 	
 	private static final String TAG = "Trackpad Fragment";
-	private String MAC = "40:B0:FA:3E:FA:91";
+	private String MAC = "";
 	private BluetoothAdapter mBluetoothAdapter = null;
 	private static final String NAME = "Droidpad";
 	
@@ -65,17 +66,17 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 	@Override
 	public void onServerSocketComplete(BluetoothSocket socket) {
 		Log.d(TAG, "Completed AsyncTask");
+		mSocket = socket;
 		try {
-			inputStream = socket.getInputStream();
-			outputStream = socket.getOutputStream();
+			mInputStream = socket.getInputStream();
+			mOutputStream = socket.getOutputStream();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		printWriter = new PrintWriter(outputStream);
-		printWriter.println("Hello world");
-		printWriter.flush();
+		mPrintWriter = new PrintWriter(mOutputStream);
+		mPrintWriter.println("Hello world");
+		mPrintWriter.flush();
 	}
 }
-
