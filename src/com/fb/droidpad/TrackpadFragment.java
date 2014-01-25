@@ -68,6 +68,8 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 		if (!mBluetoothAdapter.isEnabled()) {
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+			
+			ensureDiscoverable();
 		}
 		// otherwise set up the command service
 		else {
@@ -99,4 +101,15 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 			mPrintWriter.flush();
 		}
 	}
+	
+    private void ensureDiscoverable() {
+        Log.d(TAG, "ensure discoverable");
+        
+        if (mBluetoothAdapter.getScanMode() !=
+            BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+            startActivity(discoverableIntent);
+        }
+    }
 }
