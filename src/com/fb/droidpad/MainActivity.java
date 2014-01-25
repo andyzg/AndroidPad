@@ -15,7 +15,7 @@ import android.view.Window;
 import com.fb.droidpad.MenuFragment.OnMenuClickListener;
 
 public class MainActivity extends Activity implements GestureDetector.OnGestureListener,
-GestureDetector.OnDoubleTapListener, OnMenuClickListener {
+GestureDetector.OnDoubleTapListener/*, OnMenuClickListener*/ {
 
 	
 	
@@ -55,11 +55,11 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 
 	
 	// Fragment storing
-	private TrackpadFragment mTrackpadFragment;
 	private MenuFragment mMenuFragment;
+	/*private TrackpadFragment mTrackpadFragment;
 	private SettingsFragment mSettingsFragment;
 	private AboutFragment mAboutFragment;
-	
+	*/
 	private GestureDetector detector;
 
 	@Override
@@ -68,11 +68,12 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_frame);
 		
-		mTrackpadFragment = new TrackpadFragment();
 		mMenuFragment = new MenuFragment();
+		/*mTrackpadFragment = new TrackpadFragment();
+
 		mSettingsFragment = new SettingsFragment();
 		mAboutFragment = new AboutFragment();
-
+*/
 		//FrameLayout layout = (FrameLayout) findViewById(R.id.content_frame);
 		//layout.setOnTouchListener(this);
 		
@@ -136,7 +137,7 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 			}
 			
 			// Send the action
-			// Log.d(TAG, action.getJSON().toString());
+			Log.d(TAG, action.getJSON().toString());
 			mTrackpadFragment.sendAction(action.getJSON());
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -347,7 +348,7 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 		}*/
 		return false;
 	}
-
+/*
 	@Override
 	public void switchToTrackpad() {
 		switchToFragment(mTrackpadFragment, true);
@@ -361,5 +362,5 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	@Override
 	public void switchToAbout() {
 		switchToFragment(mAboutFragment, true);
-	}
+	}*/
 }

@@ -77,10 +77,10 @@ public class MenuFragment extends Fragment implements OnClickListener {
 			Log.d("Menu", "trackpad button has been pressed");
 			break;
 		case R.id.settings_button:
-			mListener.switchToSettings();
+			switchToFragment(mTrackpadFragment, true);
 			break;
 		case R.id.about_button:
-			mListener.switchToAbout();
+			switchToFragment(mTrackpadFragment, true);
 			break;
 		default:
 			Log.d("Menu", "Unable to find ID of button clicked");
