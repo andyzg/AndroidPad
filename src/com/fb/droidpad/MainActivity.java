@@ -24,6 +24,9 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	private static final String TAG = "Main Activity";
     private static final String DEBUG_TAG = "Gestures"; 
 	
+    // Time constraint for a right click in ms
+    private static final int RIGHT_CLICK_TIME = 200;
+    
 	// Gesture IDS
 	private static final int NO_GESTURE = -1;
 	private static final int SINGLE_TAP = 0;
@@ -31,14 +34,10 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	private static final int LONG_PRESS = 2;
 	private static final int LONG_PRESS_DRAG = 3;
 	private static final int SCROLL = 4;
-	
-	private int DOUBLE_TOUCH_CURRENT_X;
-	private int DOUBLE_TOUCH_CURRENT_Y;
-
-	private int DOUBLE_TOUCH_X;
-	private int DOUBLE_TOUCH_Y;
+	private static final int RIGHT_CLICK = 5;
 	
 	private boolean longPressing = false;
+	private boolean twoFingers = false;
 	
 	// Fragment storing
 	private TrackpadFragment mTrackpadFragment;
@@ -88,14 +87,16 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 		return true;
 	}
 
+	/**
+	 * Send the JSON to the client
+	 * @param event
+	 * @param gestureId
+	 */
 	public void sendToClient(MotionEvent event, int gestureId) {
-		/*float eventX = event.getX();
-		float eventY = event.getY();
-		
-		Log.d(VIEW_LOG_TAG, eventX + "x- location " + eventY + "y-location");
-		*/
+
 		JSONAction action;
 		
+		// Create the JSON object to be send
 		try {
 			final int pointerCount = event.getPointerCount();
 			float eventX[] = new float[pointerCount];
@@ -113,11 +114,13 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 					eventY, 
 					motionEvent);
 
+			// Add a gesture if set
 			if (gestureId != NO_GESTURE) {
 				action.setGesture(gestureId);
 			}
 			
-			Log.d(TAG, action.getJSON().toString());
+			// Send the action
+			// Log.d(TAG, action.getJSON().toString());
 			mTrackpadFragment.sendAction(action.getJSON());
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -127,20 +130,33 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		
-		// Disable long press drag
-		switch(event.getActionMasked()){
-			case MotionEvent.ACTION_UP:
-				longPressing = false;
-				sendToClient(event, NO_GESTURE);
-				break;
-			case MotionEvent.ACTION_MOVE:
-				if (event.getPointerCount() == 2){
-					sendToClient(event, SCROLL);
-					break;
+		// Log.d(TAG, "Pointer count : " + event.getPointerCount());
+		
+		// Lifting your finger
+		if (event.getActionMasked() == MotionEvent.ACTION_UP ){
+			// No longer long pressing
+			longPressing = false;
+			sendToClient(event, NO_GESTURE);
+			detector.onTouchEvent(event);
+			
+			// If there was one more than 1 finger on the screen and now lifted
+			if (twoFingers) {
+				// Check if time is less than RIGHT_CLICK_TIME 
+				if (event.getEventTime() - event.getDownTime() < RIGHT_CLICK_TIME) {
+					Log.d(TAG, "RIGHT CLICKING : " + (event.getEventTime() - event.getDownTime()));
+					sendToClient(event, RIGHT_CLICK);
 				}
-			default:
-				// Runs method depending on type of gesture
-				this.detector.onTouchEvent(event);
+				twoFingers = false;
+			}
+		} 
+		else if (event.getActionMasked() == MotionEvent.ACTION_MOVE
+				&& event.getPointerCount() == 2){
+			sendToClient(event, SCROLL);
+		} else{
+			if (event.getPointerCount() == 2) {
+				twoFingers = true;
+			}
+			detector.onTouchEvent(event);
 		}
 		
 		return true;
