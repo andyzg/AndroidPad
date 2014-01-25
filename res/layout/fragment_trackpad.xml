@@ -3,11 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E9F7FF"
-    android:orientation="vertical"
-    android:theme="@style/AppBaseTheme1" >
+    android:orientation="vertical" >
 
     <TextView
-        android:id="@+id/custom_font"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
