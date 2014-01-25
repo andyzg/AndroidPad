@@ -77,12 +77,12 @@ GestureDetector.OnDoubleTapListener {
 		return super.onTouchEvent(arg0);
 	}
 	
-	
+    private static final String DEBUG_TAG = "Gestures"; 
 
 	@Override
 	public boolean onDoubleTap(MotionEvent arg0) {
 		// TODO Auto-generated method stub
-        Log.d(VIEW_LOG_TAG, "onDoubleTap: " + arg0.toString());
+        Log.d(DEBUG_TAG, "onDoubleTap: " + arg0.toString());
 		return false;
 	}
 
@@ -99,39 +99,42 @@ GestureDetector.OnDoubleTapListener {
 
 	@Override
 	public boolean onDown(MotionEvent arg0) {
-		// TODO Auto-generated method stub
+	    Log.d(DEBUG_TAG,"onDown: " + arg0.toString()); 
 		return false;
 	}
 
 	@Override
 	public boolean onFling(MotionEvent arg0, MotionEvent arg1, float arg2,
 			float arg3) {
-		// TODO Auto-generated method stub
+		Log.d(DEBUG_TAG, "onFling: " + arg0.toString()+arg1.toString());
+
 		return false;
 	}
 
 	@Override
 	public void onLongPress(MotionEvent arg0) {
-		// TODO Auto-generated method stub
+	    Log.d(DEBUG_TAG, "onLongPress: " + arg0.toString()); 
 		
 	}
 
 	@Override
 	public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2,
 			float arg3) {
-		// TODO Auto-generated method stub
+		Log.d(DEBUG_TAG, "onScroll: " + arg0.toString()+arg0.toString());
+
 		return false;
 	}
 
 	@Override
 	public void onShowPress(MotionEvent arg0) {
-		// TODO Auto-generated method stub
+	    Log.d(DEBUG_TAG, "onShowPress: " + arg0.toString());
+
 		
 	}
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent arg0) {
-        Log.d(VIEW_LOG_TAG, "onSingleTap: " + arg0.toString());
+        Log.d(DEBUG_TAG, "onSingleTap: " + arg0.toString());
 		// TODO Auto-generated method stub
 		return false;
 	}
