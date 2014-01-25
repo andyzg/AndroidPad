@@ -89,26 +89,31 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	}
 
 	public void sendToClient(MotionEvent event, int gestureId) {
-		float eventX = event.getX();
+		/*float eventX = event.getX();
 		float eventY = event.getY();
 		
 		Log.d(VIEW_LOG_TAG, eventX + "x- location " + eventY + "y-location");
-		
+		*/
 		JSONAction action;
 		
 		try {
 			final int pointerCount = event.getPointerCount();
+			float eventX[] = new float[pointerCount];
+			float eventY[] = new float[pointerCount];
+			int motionEvent[] = new int[pointerCount];
+			
+			for (int i=0; i<pointerCount; i++) {
+				eventX[i] = event.getX(i);
+				eventY[i] = event.getY(i);
+				motionEvent[i] = getEventType(event);
+			}
+			
 			// To modify the motion event
-			if (event.getPointerCount() == 1) {
-				action = new JSONAction(new float[]{eventX}, 
-						new float[]{eventY}, 
-						new int[]{getEventType(event)});
-			}
-			// More than 1 pointer, 
-			else if (event.getPointerCount() > 1 ){
-				
-			}
-			if (gestureId != -1) {
+			action = new JSONAction(eventX, 
+					eventY, 
+					motionEvent);
+
+			if (gestureId != NO_GESTURE) {
 				action.setGesture(gestureId);
 			}
 			
@@ -124,18 +129,18 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 		
 		// Disable long press drag
 		switch(event.getActionMasked()){
-		case MotionEvent.ACTION_UP:
-			longPressing = false;
-			sendToClient(event, NO_GESTURE);
-			break;
-		case MotionEvent.ACTION_MOVE:
-			if (event.getPointerCount() == 2){
-				sendToClient(event, SCROLL);
+			case MotionEvent.ACTION_UP:
+				longPressing = false;
+				sendToClient(event, NO_GESTURE);
 				break;
-			}
-		default:
-			// Runs method depending on type of gesture
-			this.detector.onTouchEvent(event);
+			case MotionEvent.ACTION_MOVE:
+				if (event.getPointerCount() == 2){
+					sendToClient(event, SCROLL);
+					break;
+				}
+			default:
+				// Runs method depending on type of gesture
+				this.detector.onTouchEvent(event);
 		}
 		
 		return true;
