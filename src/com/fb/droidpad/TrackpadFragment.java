@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.UUID;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Fragment;
@@ -19,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class TrackpadFragment extends Fragment implements ServerSocketListener {
+public class TrackpadFragment extends Fragment implements ServerSocketListener, ActionListener {
 
 	private InputStream mInputStream = null;
 	private OutputStream mOutputStream = null;
@@ -105,10 +106,10 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 			mPrintWriter.flush();
 		}
 		
-		String action = createAction(x, y);
+		/*String action = createAction(x, y);
 		mPrintWriter.append(MSG_HEADER);
 		mPrintWriter.println(action);
-		mPrintWriter.flush();
+		mPrintWriter.flush();*/
 	}
 	
     private void ensureDiscoverable() {
@@ -121,4 +122,42 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
             startActivity(discoverableIntent);
         }
     }
+
+	@Override
+	public void mouseAction(float eventX, float eventY, int motionEvent) throws JSONException {
+		Log.d(TAG, "Sending mouse action at " + eventX + " and " + eventY);
+		JSONObject json = new JSONObject();
+		
+		JSONObject pointer = new JSONObject();
+		
+		// Coordinates of mouse
+		pointer.put("x", eventX);
+		pointer.put("y", eventY);
+		pointer.put("motionEvent", 1);
+		
+		// Add to main JSON
+		json.accumulate("pointers", pointer);
+		
+		JSONObject gesture = new JSONObject();
+		gesture.put("type", 0);
+		gesture.put("magnitude", 0);
+		
+		json.put("gesture", gesture);
+		
+		// Log.d(TAG, json.toString());
+		mPrintWriter.println(json.toString());
+		mPrintWriter.flush();
+	}
+
+	@Override
+	public void singleTapAction(float eventX, float eventY, int motionEvent) {
+		Log.d(TAG, "Sending single tap action at " + eventX + " and " + eventY);
+	}
+
+	@Override
+	public void multiTapAction(float eventX[], float eventY[], int motionEvent) {
+		Log.d(TAG, "Sending double tap action at " + eventX + " and " + eventY);
+	}
+    
+    
 }
