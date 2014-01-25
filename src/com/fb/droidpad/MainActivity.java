@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.widget.FrameLayout;
 
 public class MainActivity extends Activity implements OnTouchListener {
@@ -26,7 +27,9 @@ public class MainActivity extends Activity implements OnTouchListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main_frame);
+	
 		FrameLayout layout = (FrameLayout) findViewById(R.id.content_frame);
 		layout.setOnTouchListener(this);
 		
