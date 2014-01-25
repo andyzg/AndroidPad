@@ -23,6 +23,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 	
 	private Path path = new Path();
 	private TrackpadFragment mTrackpadFragment;
+	private MenuFragment mMenuFragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 		layout.setOnTouchListener(this);
 		
 		mTrackpadFragment = new TrackpadFragment();
+		mMenuFragment = new MenuFragment();
 		switchToFragment(mTrackpadFragment, true);
 	}
 
@@ -62,36 +64,37 @@ public class MainActivity extends Activity implements OnTouchListener {
 		float eventX = event.getX();
 		float eventY = event.getY();
 		
-		switch (event.getAction()) {
-		case MotionEvent.ACTION_DOWN:
-			path.moveTo(eventX,  eventY);
-			return true;
-		case MotionEvent.ACTION_MOVE:
-			Log.d(VIEW_LOG_TAG, eventX + "x- location " + eventY + "y-location");
-			path.reset();
-			path.addCircle(eventX,eventY,50,Path.Direction.CW);
-			JSONAction action;
-			// Send the info to be processed into JSON and 
-			// sent to the PC
-			try {
-				// To modify the motion event
-				action = new JSONAction(new float[]{eventX}, 
-						new float[]{eventY}, 
-						new int[]{0});
-				Log.d(TAG, action.getJSON().toString());
-				mTrackpadFragment.sendAction(action.getJSON());
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			
-			//process finger movement... stream the data?
-			
-			break;
-		case MotionEvent.ACTION_UP:
-			break;
-		default:
-			return false;
+		Log.d(VIEW_LOG_TAG, eventX + "x- location " + eventY + "y-location");
+		path.reset();
+		path.addCircle(eventX,eventY,50,Path.Direction.CW);
+		JSONAction action;
+		// Send the info to be processed into JSON and 
+		// sent to the PC
+		try {
+			// To modify the motion event
+			action = new JSONAction(new float[]{eventX}, 
+					new float[]{eventY}, 
+					new int[]{getEventType(event)});
+			Log.d(TAG, action.getJSON().toString());
+			mTrackpadFragment.sendAction(action.getJSON());
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+		
+		//process finger movement... stream the data?
 		return true;
+	}
+	
+	private int getEventType(MotionEvent event) {
+		switch(event.getActionMasked()) {
+		case MotionEvent.ACTION_DOWN:
+			return 0;
+		case MotionEvent.ACTION_MOVE:
+			return 1;
+		case MotionEvent.ACTION_UP:
+			return 2;
+		default:
+			return -1;	
+		}
 	}
 }

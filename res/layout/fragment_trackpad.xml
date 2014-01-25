@@ -2,14 +2,15 @@
     android:id="@+id/tableLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5DC"
+    android:background="@color/BACKGROUND_COLOR"
     android:orientation="vertical" >
 
     <Button
         android:id="@+id/send"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="69dp"
-        android:text="Click to Send" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="Turn On Trackpad" />
 
 </RelativeLayout>

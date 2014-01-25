@@ -142,6 +142,9 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 	 * @param json
 	 */
 	public void sendAction(String json) {
+		if (mSocket == null) {
+			return;
+		}
 		Log.d(TAG, "Sending JSON");
 		mPrintWriter.println(json.toString());
 		mPrintWriter.flush();
