@@ -10,21 +10,25 @@ import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.GestureDetector;
 import android.widget.FrameLayout;
+import android.support.v4.view.GestureDetectorCompat;
 
-public class MainActivity extends Activity implements OnTouchListener {
+public class MainActivity extends Activity implements GestureDetector.OnGestureListener,
+GestureDetector.OnDoubleTapListener {
 
 
 	private static final String VIEW_LOG_TAG = "test";
 	private Path path = new Path();
-	
+	private GestureDetectorCompat detector;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main_frame);
-		FrameLayout layout = (FrameLayout) findViewById(R.id.content_frame);
-		layout.setOnTouchListener(this);
-		
+		//FrameLayout layout = (FrameLayout) findViewById(R.id.content_frame);
+		//layout.setOnTouchListener(this);
+		detector = new GestureDetectorCompat(this,this);
+		detector.setOnDoubleTapListener(this);
 		switchToFragment(new TrackpadFragment(), true);
 	}
 
@@ -49,11 +53,12 @@ public class MainActivity extends Activity implements OnTouchListener {
 	}
 
 	@Override
-	public boolean onTouch(View arg0, MotionEvent event) {
-		float eventX = event.getX();
-		float eventY = event.getY();
+	public boolean onTouchEvent(MotionEvent arg0) {
+		this.detector.onTouchEvent(arg0);
+		float eventX = arg0.getX();
+		float eventY = arg0.getY();
 		
-		switch (event.getAction()) {
+		switch (arg0.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			path.moveTo(eventX,  eventY);
 			return true;
@@ -69,6 +74,65 @@ public class MainActivity extends Activity implements OnTouchListener {
 		default:
 			return false;
 		}
-		return true;
+		return super.onTouchEvent(arg0);
+	}
+	
+	
+
+	@Override
+	public boolean onDoubleTap(MotionEvent arg0) {
+		// TODO Auto-generated method stub
+        Log.d(VIEW_LOG_TAG, "onDoubleTap: " + arg0.toString());
+		return false;
+	}
+
+	@Override
+	public boolean onDoubleTapEvent(MotionEvent arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onSingleTapConfirmed(MotionEvent arg0) {
+		return false;
+	}
+
+	@Override
+	public boolean onDown(MotionEvent arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onFling(MotionEvent arg0, MotionEvent arg1, float arg2,
+			float arg3) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2,
+			float arg3) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent arg0) {
+        Log.d(VIEW_LOG_TAG, "onSingleTap: " + arg0.toString());
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
