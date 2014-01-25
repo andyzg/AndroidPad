@@ -29,8 +29,8 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	private static final int SINGLE_TAP = 0;
 	private static final int DOUBLE_TAP = 1;
 	private static final int LONG_PRESS = 2;
-	private static final int DOUBLE_TAP_MOVE = 3;
-	private static final int PINCH = 4;
+	private static final int LONG_PRESS_DRAG = 3;
+	private static final int SCROLL = 4;
 	
 	private int DOUBLE_TOUCH_CURRENT_X;
 	private int DOUBLE_TOUCH_CURRENT_Y;
@@ -38,7 +38,7 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	private int DOUBLE_TOUCH_X;
 	private int DOUBLE_TOUCH_Y;
 	
-	private boolean DOUBLE_TAPPED = false;
+	private boolean longPressing = false;
 	
 	// Fragment storing
 	private TrackpadFragment mTrackpadFragment;
@@ -63,6 +63,7 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 		//layout.setOnTouchListener(this);
 		
 		detector = new GestureDetector(this,this);
+		detector.setIsLongpressEnabled(false);
 		detector.setOnDoubleTapListener(this);
 		switchToFragment(mTrackpadFragment, true);
 	}
@@ -96,10 +97,17 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 		JSONAction action;
 		
 		try {
+			final int pointerCount = event.getPointerCount();
 			// To modify the motion event
-			action = new JSONAction(new float[]{eventX}, 
-					new float[]{eventY}, 
-					new int[]{getEventType(event)});
+			if (event.getPointerCount() == 1) {
+				action = new JSONAction(new float[]{eventX}, 
+						new float[]{eventY}, 
+						new int[]{getEventType(event)});
+			}
+			// More than 1 pointer, 
+			else if (event.getPointerCount() > 1 ){
+				
+			}
 			if (gestureId != -1) {
 				action.setGesture(gestureId);
 			}
@@ -113,9 +121,22 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// Runs method depending on type of gesture
-		this.detector.onTouchEvent(event);
 		
+		// Disable long press drag
+		switch(event.getActionMasked()){
+		case MotionEvent.ACTION_UP:
+			longPressing = false;
+			sendToClient(event, NO_GESTURE);
+			break;
+		case MotionEvent.ACTION_MOVE:
+			if (event.getPointerCount() == 2){
+				sendToClient(event, SCROLL);
+				break;
+			}
+		default:
+			// Runs method depending on type of gesture
+			this.detector.onTouchEvent(event);
+		}
 		
 		return true;
 	}
@@ -179,11 +200,11 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	public boolean onScroll(MotionEvent event, MotionEvent moveEvent, float arg2,
 			float arg3) {
 		Log.d(DEBUG_TAG, "onScroll: ");
-		if (!DOUBLE_TAPPED) {
-			sendToClient(moveEvent, NO_GESTURE);
+		if (longPressing) {
+			sendToClient(moveEvent, LONG_PRESS_DRAG);
 		}
 		else {
-			sendToClient(moveEvent, DOUBLE_TAP_MOVE);
+			sendToClient(moveEvent, NO_GESTURE);
 		}
 		return true;
 	}
@@ -209,20 +230,23 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	public void onShowPress(MotionEvent event) {
 	    Log.d(DEBUG_TAG, "onShowPress: ");
 	    //sendToClient(event, LONG_PRESS);
+	    longPressing = true;
 	    return;
 	}
 	
 	@Override
 	public boolean onDoubleTapEvent(MotionEvent event) {
 		// Log.d(DEBUG_TAG, "onDoubleTap: ");
-		// sendToClient(event, DOUBLE_TAP);
-		switch (event.getActionMasked()) {
-			case MotionEvent.ACTION_DOWN:
-				DOUBLE_TAPPED = true;
+		/*switch (event.getActionMasked()) {
+			case MotionEvent.ACTION_MOVE:
+				Log.d(DEBUG_TAG, "Double tap drag");
+				//sendToClient(event, DOUBLE_TAP_DRAG);
 			case MotionEvent.ACTION_UP:
-				DOUBLE_TAPPED = false;
-		}
-		return true;
+				// TODO Fix firing multiple times
+				Log.d(DEBUG_TAG, "Double tap up");
+				//sendToClient(event, DOUBLE_TAP);
+		}*/
+		return false;
 	}
 
 	@Override
