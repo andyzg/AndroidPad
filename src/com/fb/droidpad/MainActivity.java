@@ -2,18 +2,17 @@ package com.fb.droidpad;
 
 import org.json.JSONException;
 
-import com.fb.droidpad.MenuFragment.OnMenuClickListener;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.Window;
+
+import com.fb.droidpad.MenuFragment.OnMenuClickListener;
 
 public class MainActivity extends Activity implements GestureDetector.OnGestureListener,
 GestureDetector.OnDoubleTapListener, OnMenuClickListener {
@@ -47,7 +46,7 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	private SettingsFragment mSettingsFragment;
 	private AboutFragment mAboutFragment;
 	
-	private GestureDetectorCompat detector;
+	private GestureDetector detector;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +56,15 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 		
 		mTrackpadFragment = new TrackpadFragment();
 		mMenuFragment = new MenuFragment();
-		switchToFragment(mMenuFragment, true);
+		mSettingsFragment = new SettingsFragment();
+		mAboutFragment = new AboutFragment();
 
 		//FrameLayout layout = (FrameLayout) findViewById(R.id.content_frame);
 		//layout.setOnTouchListener(this);
 		
-		detector = new GestureDetectorCompat(this,this);
+		detector = new GestureDetector(this,this);
 		detector.setOnDoubleTapListener(this);
-		switchToFragment(new TrackpadFragment(), true);
+		switchToFragment(mTrackpadFragment, true);
 	}
 
     /**
@@ -232,7 +232,7 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 
 	@Override
 	public void switchToSettings() {
-		switchToFragment(mSettingsFragment, true;);
+		switchToFragment(mSettingsFragment, true);
 	}
 
 	@Override

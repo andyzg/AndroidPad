@@ -6,9 +6,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.UUID;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothSocket;
@@ -18,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 public class TrackpadFragment extends Fragment implements ServerSocketListener {
 
@@ -38,6 +34,9 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 	
 	private static final int REQUEST_ENABLE_BT = 2;
 	
+	public TrackpadFragment() {
+		// Empty constructor
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

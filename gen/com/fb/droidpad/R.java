@@ -30,13 +30,11 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int about_button=0x7f090006;
-        public static final int action_settings=0x7f090009;
-        public static final int button1=0x7f090005;
-        public static final int button2=0x7f090007;
-        public static final int content_frame=0x7f090008;
+        public static final int about_button=0x7f090004;
+        public static final int action_settings=0x7f090007;
+        public static final int content_frame=0x7f090006;
         public static final int custom_font=0x7f090001;
-        public static final int settings_button=0x7f090004;
+        public static final int settings_button=0x7f090005;
         public static final int tableLayout1=0x7f090000;
         public static final int textView1=0x7f090002;
         public static final int trackpad_button=0x7f090003;

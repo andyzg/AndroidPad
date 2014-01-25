@@ -39,6 +39,7 @@ public class MenuFragment extends Fragment implements OnClickListener {
 		settingsButton = (Button) v.findViewById(R.id.settings_button);
 		aboutButton = (Button) v.findViewById(R.id.about_button);
 		
+				
 		trackpadButton.setOnClickListener(this);
 		settingsButton.setOnClickListener(this);
 		aboutButton.setOnClickListener(this);
