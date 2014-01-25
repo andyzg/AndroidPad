@@ -11,10 +11,12 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        public static final int BACKGROUND_COLOR=0x7f040000;
         public static final int BLUE=0x7f040002;
         public static final int DARK_BLUE=0x7f040003;
+        public static final int background=0x7f040000;
+        public static final int button=0x7f040005;
         public static final int color2=0x7f040001;
+        public static final int text=0x7f040004;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -30,14 +32,14 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int about_button=0x7f090004;
+        public static final int about_button=0x7f090003;
         public static final int action_settings=0x7f090007;
         public static final int content_frame=0x7f090006;
         public static final int custom_font=0x7f090001;
-        public static final int settings_button=0x7f090005;
+        public static final int settings_button=0x7f090004;
         public static final int tableLayout1=0x7f090000;
-        public static final int textView1=0x7f090002;
-        public static final int trackpad_button=0x7f090003;
+        public static final int textView1=0x7f090005;
+        public static final int trackpad_button=0x7f090002;
     }
     public static final class layout {
         public static final int fragment_about=0x7f030000;
