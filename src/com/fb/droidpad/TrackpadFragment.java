@@ -35,6 +35,7 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 	
 	private static final int REQUEST_ENABLE_BT = 2;
 	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,4 +113,5 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
             startActivity(discoverableIntent);
         }
     }
+    
 }
