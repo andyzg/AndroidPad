@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 public class TrackpadFragment extends Fragment implements ServerSocketListener {
 
@@ -22,6 +23,8 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 	private OutputStream mOutputStream = null;
 	private PrintWriter mPrintWriter = null;
 	private BluetoothSocket mSocket = null;
+	
+	private Button mButton1;
 	
 	private static final String TAG = "Trackpad Fragment";
 	private String MAC = "";
@@ -41,7 +44,18 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return super.onCreateView(inflater, container, savedInstanceState);
+		View v = inflater.inflate(R.layout.fragment_trackpad, container,
+                false);
+		
+		mButton1 = (Button) v.findViewById(R.id.send);
+		mButton1.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				sendMessage();
+			}
+		});
+		return v;
 	}
 	
 	@Override
@@ -76,7 +90,13 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 		}
 		
 		mPrintWriter = new PrintWriter(mOutputStream);
-		mPrintWriter.println("Hello world");
-		mPrintWriter.flush();
+	}
+	
+	public void sendMessage() {
+		if (mPrintWriter != null) {
+			Log.d(TAG, "Sending hello world!");
+			mPrintWriter.println("Hello world");
+			mPrintWriter.flush();
+		}
 	}
 }
