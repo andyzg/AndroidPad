@@ -133,7 +133,7 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 		if (mSocket == null) {
 			return;
 		}
-		// Log.d(TAG, "Sending JSON");
+		Log.d(TAG, "Sending JSON");
 		mPrintWriter.println(json.toString());
 		mPrintWriter.flush();
 	}

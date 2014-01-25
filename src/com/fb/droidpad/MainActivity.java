@@ -52,6 +52,7 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	private boolean threeFingers = false;
 	// Easter egg event, opens up facebook
 	private boolean fourFingers = false;
+
 	
 	// Fragment storing
 	private TrackpadFragment mTrackpadFragment;
@@ -78,7 +79,8 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 		detector = new GestureDetector(this,this);
 		detector.setIsLongpressEnabled(false);
 		detector.setOnDoubleTapListener(this);
-		switchToFragment(mTrackpadFragment, true);
+
+		switchToFragment(mMenuFragment, true);
 	}
 
     /**
@@ -152,7 +154,7 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 			longPressing = false;
 			sendToClient(event, NO_GESTURE);
 			detector.onTouchEvent(event);
-			
+
 			// If lifting one of 4 fingers, run custom gesture
 			if (fourFingers) {
 				Log.d(TAG, "Custom gesture");
@@ -203,7 +205,6 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 				}
 				twoFingers = false;
 			}
-			
 		} 
 		else if (event.getActionMasked() == MotionEvent.ACTION_MOVE &&
 				event.getPointerCount() == 3) {
