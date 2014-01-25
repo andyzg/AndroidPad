@@ -1,5 +1,6 @@
 package com.fb.droidpad;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+@SuppressLint("ValidFragment")
 public class MenuFragment extends Fragment implements OnClickListener {
 	
 	private Button trackpadButton;
@@ -16,6 +18,11 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private Button aboutButton;
 
 	private OnMenuClickListener mListener;
+	
+	
+	public MenuFragment(OnMenuClickListener listener) {
+		this.mListener = listener;
+	}
 	
 	public interface OnMenuClickListener {
 		public void switchToTrackpad();

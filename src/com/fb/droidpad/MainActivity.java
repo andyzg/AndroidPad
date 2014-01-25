@@ -68,7 +68,7 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 		setContentView(R.layout.main_frame);
 		
 		mTrackpadFragment = new TrackpadFragment();
-		mMenuFragment = new MenuFragment();
+		mMenuFragment = new MenuFragment(this);
 		mSettingsFragment = new SettingsFragment();
 		mAboutFragment = new AboutFragment();
 
@@ -78,7 +78,7 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 		detector = new GestureDetector(this,this);
 		detector.setIsLongpressEnabled(false);
 		detector.setOnDoubleTapListener(this);
-		switchToFragment(mTrackpadFragment, true);
+		switchToFragment(mMenuFragment, true);
 	}
 
     /**
