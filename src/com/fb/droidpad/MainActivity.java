@@ -27,6 +27,11 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
     // Time constraint for a right click in ms
     private static final int RIGHT_CLICK_TIME = 200;
     
+    // MotionEvent Actions
+    private static final int ACTION_DOWN = 0;
+    private static final int ACTION_MOVE = 1;
+    private static final int ACTION_UP = 2;
+    
 	// Gesture IDS
 	private static final int NO_GESTURE = -1;
 	private static final int SINGLE_TAP = 0;
@@ -35,9 +40,18 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	private static final int LONG_PRESS_DRAG = 3;
 	private static final int SCROLL = 4;
 	private static final int RIGHT_CLICK = 5;
+	private static final int LEFT_TAB_SWITCH = 6;
+	private static final int RIGHT_TAB_SWITCH = 7;
+	private static final int CUSTOM_GESTURE = 8;
+	
+	private float tabSwitchX = 0;
+	private float tabSwitchCurrentX = 0;
 	
 	private boolean longPressing = false;
 	private boolean twoFingers = false;
+	private boolean threeFingers = false;
+	// Easter egg event, opens up facebook
+	private boolean fourFingers = false;
 	
 	// Fragment storing
 	private TrackpadFragment mTrackpadFragment;
@@ -139,8 +153,49 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 			sendToClient(event, NO_GESTURE);
 			detector.onTouchEvent(event);
 			
+			// If lifting one of 4 fingers, run custom gesture
+			if (fourFingers) {
+				Log.d(TAG, "Custom gesture");
+				sendToClient(event, CUSTOM_GESTURE);
+				fourFingers = false;
+				threeFingers = false;
+				twoFingers = false;
+			}
+			// If lifting from 3 fingers, swap tabs
+			else if (threeFingers) {
+				
+				tabSwitchCurrentX = event.getX();
+				Log.d(TAG, "Final X : " + tabSwitchCurrentX);
+				
+/*				for (int i=0; i<event.getPointerCount(); i++) {
+					tabSwitchCurrentX += event.getX(i)/event.getPointerCount();
+				}*/
+
+				float difference = tabSwitchCurrentX - tabSwitchX;
+				
+				Log.d(TAG, "Difference from " + tabSwitchCurrentX + " and " + tabSwitchX + " is " + difference);
+				// Moved at least 100 pixels
+				if (difference > 50 || difference < 50) {
+					// If to the right
+					if (difference > 0) {
+						Log.d(TAG, "To the right swap");
+						sendToClient(event, RIGHT_TAB_SWITCH);
+					}
+					// If to the left
+					else {
+						Log.d(TAG, "To the left swap");
+						sendToClient(event, LEFT_TAB_SWITCH);
+					}
+					twoFingers = false;
+				}
+				
+				// Null everything else
+				threeFingers = false;
+				tabSwitchX = 0;
+				tabSwitchCurrentX=0;
+			}
 			// If there was one more than 1 finger on the screen and now lifted
-			if (twoFingers) {
+			else if (twoFingers) {
 				// Check if time is less than RIGHT_CLICK_TIME 
 				if (event.getEventTime() - event.getDownTime() < RIGHT_CLICK_TIME) {
 					Log.d(TAG, "RIGHT CLICKING : " + (event.getEventTime() - event.getDownTime()));
@@ -148,13 +203,35 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 				}
 				twoFingers = false;
 			}
+			
 		} 
-		else if (event.getActionMasked() == MotionEvent.ACTION_MOVE
-				&& event.getPointerCount() == 2){
+		else if (event.getActionMasked() == MotionEvent.ACTION_MOVE &&
+				event.getPointerCount() == 3) {
+			// Log.d(TAG, "Tab swipe");
+		}
+		else if (event.getActionMasked() == MotionEvent.ACTION_MOVE && 
+				event.getPointerCount() == 2){
 			sendToClient(event, SCROLL);
-		} else{
+		}
+		else {
+			// Switch caused an unexpected error, using if instead
 			if (event.getPointerCount() == 2) {
 				twoFingers = true;
+			}
+			else if (event.getPointerCount() == 3 && 
+					event.getActionMasked() != MotionEvent.ACTION_POINTER_UP) {
+				tabSwitchX = event.getX();
+				Log.d(TAG, "Initial X" + tabSwitchX);
+/*				for (int i=0; i<event.getPointerCount(); i++) {
+					tabSwitchX += event.getX(i)/event.getPointerCount();
+				}*/
+				threeFingers = true;
+				twoFingers = false;
+			}
+			else if (event.getPointerCount() == 4) {
+				fourFingers = true;
+				threeFingers = false;
+				twoFingers = false;
 			}
 			detector.onTouchEvent(event);
 		}
@@ -165,13 +242,13 @@ GestureDetector.OnDoubleTapListener, OnMenuClickListener {
 	private int getEventType(MotionEvent event) {
 		switch(event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
-				return 0;
+				return ACTION_DOWN;
 			case MotionEvent.ACTION_MOVE:
-				return 1;
+				return ACTION_MOVE;
 			case MotionEvent.ACTION_UP:
-				return 2;
+				return ACTION_UP;
 			default:
-				return -1;	
+				return NO_GESTURE;	
 		}
 	}
 	

@@ -42,6 +42,36 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// Load the layout
+		View v = inflater.inflate(R.layout.fragment_trackpad, container,
+                false);
+		
+		return v;
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG, "On pause");
+		try {
+			mSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Insert any code if required
+	 */
+	@Override
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG, "On Start");
 		// Obtain bluetooth adapter
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		// If BT is not on, request that it be enabled.
@@ -58,25 +88,6 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 			new ServerTask(mUUID, NAME, this).execute(mBluetoothAdapter);
 			// new ClientTask(mUUID, MAC, this).execute(mBluetoothAdapter);
 		}
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		// Load the layout
-		View v = inflater.inflate(R.layout.fragment_trackpad, container,
-                false);
-		
-		return v;
-	}
-	
-	/**
-	 * Insert any code if required
-	 */
-	@Override
-	public void onStart() {
-		super.onStart();
-
 	}
 
 	/**
@@ -122,7 +133,7 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 		if (mSocket == null) {
 			return;
 		}
-		Log.d(TAG, "Sending JSON");
+		// Log.d(TAG, "Sending JSON");
 		mPrintWriter.println(json.toString());
 		mPrintWriter.flush();
 	}
