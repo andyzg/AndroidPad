@@ -4,20 +4,21 @@ import java.io.IOException;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.util.Log;
 
-class ServerTask extends AsyncTask<BluetoothAdapter, Void, BluetoothSocket> {
+class ClientTask extends AsyncTask<BluetoothAdapter, Void, BluetoothSocket> {
 
 	private String TAG = "Asynctask";
-	private String name;
+	private String MAC;
 	private UUID uuid;
 	private ServerSocketListener listen;
 	
-	public ServerTask(UUID uuid, String name, ServerSocketListener listen) {
-		this.name = name;
+	public ClientTask(UUID uuid, String MAC, ServerSocketListener listen) {
+		this.MAC = MAC;
 		this.uuid = uuid;
 		this.listen = listen;
 	}
@@ -27,13 +28,12 @@ class ServerTask extends AsyncTask<BluetoothAdapter, Void, BluetoothSocket> {
 		BluetoothSocket mSocket = null;
 		Log.d(TAG, "Starting doinbackground");
 		try {
-			Log.d(TAG, bt[0].getName());
-			BluetoothServerSocket server = bt[0].listenUsingInsecureRfcommWithServiceRecord(name, uuid);
+			// BluetoothDevice device = bt[0].getBondedDevices();
+			//mSocket = device.createRfcommSocketToServiceRecord(uuid);
 			Log.d(TAG, "Received serversocket from UUID " + uuid + ", now accepting");
-			mSocket = server.accept();
+			mSocket.connect();
 			
 			Log.d(TAG, "Received socket, closing server");
-			server.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			Log.d("AsyncTask", "Unable to get bluetooth socket");

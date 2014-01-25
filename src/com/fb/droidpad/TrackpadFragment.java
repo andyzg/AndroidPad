@@ -1,11 +1,13 @@
 package com.fb.droidpad;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.UUID;
 
 import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +18,12 @@ import android.view.ViewGroup;
 
 public class TrackpadFragment extends Fragment implements ServerSocketListener {
 
+	private InputStream inputStream;
+	private OutputStream outputStream;
+	private PrintWriter printWriter;
+	
 	private static final String TAG = "Trackpad Fragment";
-	// private String MACAddress = "40:B0:FA:3E:FA:91";
+	private String MAC = "40:B0:FA:3E:FA:91";
 	private BluetoothAdapter mBluetoothAdapter = null;
 	private static final String NAME = "Droidpad";
 	
@@ -50,14 +56,26 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 		}
 		// otherwise set up the command service
 		else {
-			
+			Log.d(TAG, "Starting Asynctask");
 			new ServerTask(mUUID, NAME, this).execute(mBluetoothAdapter);
+			// new ClientTask(mUUID, MAC, this).execute(mBluetoothAdapter);
 		}
 	}
 
 	@Override
 	public void onServerSocketComplete(BluetoothSocket socket) {
 		Log.d(TAG, "Completed AsyncTask");
+		try {
+			inputStream = socket.getInputStream();
+			outputStream = socket.getOutputStream();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		printWriter = new PrintWriter(outputStream);
+		printWriter.println("Hello world");
+		printWriter.flush();
 	}
 }
 
