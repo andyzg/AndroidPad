@@ -1,5 +1,7 @@
 package com.fb.droidpad;
 
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -17,6 +19,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 
 	private static final String VIEW_LOG_TAG = "test";
 	private Path path = new Path();
+	private TrackpadFragment mTrackpadFragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +28,8 @@ public class MainActivity extends Activity implements OnTouchListener {
 		FrameLayout layout = (FrameLayout) findViewById(R.id.content_frame);
 		layout.setOnTouchListener(this);
 		
-		switchToFragment(new TrackpadFragment(), true);
+		mTrackpadFragment = new TrackpadFragment();
+		switchToFragment(mTrackpadFragment, true);
 	}
 
     /**
@@ -61,6 +65,19 @@ public class MainActivity extends Activity implements OnTouchListener {
 			Log.d(VIEW_LOG_TAG, eventX + "x- location " + eventY + "y-location");
 			path.reset();
 			path.addCircle(eventX,eventY,50,Path.Direction.CW);
+			JSONAction action;
+			// Send the info to be processed into JSON and 
+			// sent to the PC
+			try {
+				// To modify the motion event
+				action = new JSONAction(new float[]{eventX}, 
+						new float[]{eventY}, 
+						new int[]{0});
+				mTrackpadFragment.sendAction(action.getJSON());
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
 			//process finger movement... stream the data?
 			
 			break;
