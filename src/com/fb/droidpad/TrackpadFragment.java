@@ -45,6 +45,7 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		// Obtain bluetooth adapter
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 		// If BT is not on, request that it be enabled.
 	        // setupCommand() will then be called during onActivityResult
@@ -65,9 +66,11 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		// Load the layout
 		View v = inflater.inflate(R.layout.fragment_trackpad, container,
                 false);
 		
+		// Testing button
 		mButton1 = (Button) v.findViewById(R.id.send);
 		mButton1.setOnClickListener(new View.OnClickListener() {
 			
@@ -79,12 +82,19 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 		return v;
 	}
 	
+	/**
+	 * Insert any code if required
+	 */
 	@Override
 	public void onStart() {
 		super.onStart();
 
 	}
 
+	/**
+	 * After Async task is done, run this to instantiate
+	 * the serversocket and input/output streams
+	 */
 	@Override
 	public void onServerSocketComplete(BluetoothSocket socket) {
 		Log.d(TAG, "Completed AsyncTask");
@@ -100,19 +110,22 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 		mPrintWriter = new PrintWriter(mOutputStream);
 	}
 	
+	/**
+	 * For testing purposes
+	 */
 	public void sendMessage() {
 		if (mPrintWriter != null) {
 			Log.d(TAG, "Sending hello world!");
 			mPrintWriter.println("Hello world");
 			mPrintWriter.flush();
 		}
-		
-		/*String action = createAction(x, y);
-		mPrintWriter.append(MSG_HEADER);
-		mPrintWriter.println(action);
-		mPrintWriter.flush();*/
 	}
 	
+	/**
+	 * Ensure that the user is discoverable if 
+	 * the user is connected and needs to be
+	 * paired
+	 */
     private void ensureDiscoverable() {
         Log.d(TAG, "ensure discoverable");
         

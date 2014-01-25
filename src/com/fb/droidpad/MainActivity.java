@@ -18,6 +18,8 @@ public class MainActivity extends Activity implements OnTouchListener {
 
 
 	private static final String VIEW_LOG_TAG = "test";
+	private static final String TAG = "Main Activity";
+	
 	private Path path = new Path();
 	private TrackpadFragment mTrackpadFragment;
 	
@@ -73,6 +75,7 @@ public class MainActivity extends Activity implements OnTouchListener {
 				action = new JSONAction(new float[]{eventX}, 
 						new float[]{eventY}, 
 						new int[]{0});
+				Log.d(TAG, action.getJSON().toString());
 				mTrackpadFragment.sendAction(action.getJSON());
 			} catch (JSONException e) {
 				e.printStackTrace();

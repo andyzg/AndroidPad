@@ -1,5 +1,6 @@
 package com.fb.droidpad;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -10,13 +11,16 @@ public class JSONAction {
 		json = new JSONObject();
 		
 		int length = eventX.length;
+		JSONArray array = new JSONArray();
+		
 		for (int i=0; i<length; i++) {
 			JSONObject pointer = new JSONObject();
 			pointer.put("x", eventX[i]);
 			pointer.put("y", eventY[i]);
 			pointer.put("motionEvent", motionEvent[i]);
-			json.accumulate("pointers", pointer);
+			array.put(pointer);
 		}
+		json.put("pointers", array);
 		this.json = json;
 	}
 	
