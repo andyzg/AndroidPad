@@ -28,8 +28,6 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 	private BluetoothSocket mSocket = null;
 	private BluetoothAdapter mBluetoothAdapter = null;
 	
-	private Button mButton1;
-	
 	private static final String TAG = "Trackpad Fragment";
 	
 	
@@ -70,15 +68,6 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 		View v = inflater.inflate(R.layout.fragment_trackpad, container,
                 false);
 		
-		// Testing button
-		mButton1 = (Button) v.findViewById(R.id.send);
-		mButton1.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				sendMessage();
-			}
-		});
 		return v;
 	}
 	
@@ -108,17 +97,6 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener {
 		}
 		
 		mPrintWriter = new PrintWriter(mOutputStream);
-	}
-	
-	/**
-	 * For testing purposes
-	 */
-	public void sendMessage() {
-		if (mPrintWriter != null) {
-			Log.d(TAG, "Sending hello world!");
-			mPrintWriter.println("Hello world");
-			mPrintWriter.flush();
-		}
 	}
 	
 	/**

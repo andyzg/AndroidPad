@@ -15,9 +15,9 @@ public class MenuFragment extends Fragment implements OnClickListener {
 	private Button settingsButton;
 	private Button aboutButton;
 
-	private OnMenuClick mListener;
+	private OnMenuClickListener mListener;
 	
-	public interface OnMenuClick {
+	public interface OnMenuClickListener {
 		public void switchToTrackpad();
 		public void switchToSettings();
 		public void switchToAbout();

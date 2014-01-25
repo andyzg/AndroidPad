@@ -24,6 +24,12 @@ public class JSONAction {
 		this.json = json;
 	}
 	
+	public void setGesture(int id) throws JSONException {
+		JSONObject gesture = new JSONObject();
+		gesture.put("type", id);
+		json.put("gesture", gesture);
+	}
+	
 	public String getJSON() {
 		return this.json.toString();
 	}
