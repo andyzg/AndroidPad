@@ -123,41 +123,52 @@ public class TrackpadFragment extends Fragment implements ServerSocketListener, 
         }
     }
 
+    /**
+     * Single mouse scrolling action
+     */
 	@Override
 	public void mouseAction(float eventX, float eventY, int motionEvent) throws JSONException {
 		Log.d(TAG, "Sending mouse action at " + eventX + " and " + eventY);
 		JSONObject json = new JSONObject();
-		
-		JSONObject pointer = new JSONObject();
-		
-		// Coordinates of mouse
-		pointer.put("x", eventX);
-		pointer.put("y", eventY);
-		pointer.put("motionEvent", 1);
-		
-		// Add to main JSON
-		json.accumulate("pointers", pointer);
-		
-		JSONObject gesture = new JSONObject();
-		gesture.put("type", 0);
-		gesture.put("magnitude", 0);
-		
-		json.put("gesture", gesture);
-		
-		// Log.d(TAG, json.toString());
+		addPointers(json, new float[]{eventX}, new float[]{eventY}, new int[]{motionEvent});
+	}
+
+	/**
+	 * Multiple inputs received to be turned into a JSON
+	 */
+	@Override
+	public void multiTapAction(float eventX[], float eventY[], int motionEvent[]) throws JSONException {
+		Log.d(TAG, "Sending double tap action at " + eventX[0] + " and " + eventY[0]);
+		JSONObject json = new JSONObject();
+		addPointers(json, eventX, eventY, motionEvent);
+		sendAction(json);
+	}
+	
+	/**
+	 * Adds the pointers to the JSON to be sent
+	 * @param json
+	 * @param eventX
+	 * @param eventY
+	 * @param motionEvent
+	 * @throws JSONException
+	 */
+	public void addPointers(JSONObject json, float eventX[], float eventY[], int motionEvent[]) throws JSONException {
+		for (int i=0; i<eventX.length; i++) {
+			JSONObject pointer = new JSONObject();
+			pointer.put("x", eventX[i]);
+			pointer.put("y", eventY[i]);
+			pointer.put("motionEvent", motionEvent[i]);
+			json.accumulate("pointers", pointer);
+		}
+	}
+	
+	/**
+	 * Sends JSON to the client PC
+	 * @param json
+	 */
+	public void sendAction(JSONObject json) {
+		Log.d(TAG, "Sending JSON");
 		mPrintWriter.println(json.toString());
 		mPrintWriter.flush();
 	}
-
-	@Override
-	public void singleTapAction(float eventX, float eventY, int motionEvent) {
-		Log.d(TAG, "Sending single tap action at " + eventX + " and " + eventY);
-	}
-
-	@Override
-	public void multiTapAction(float eventX[], float eventY[], int motionEvent) {
-		Log.d(TAG, "Sending double tap action at " + eventX + " and " + eventY);
-	}
-    
-    
 }
